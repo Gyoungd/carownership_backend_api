@@ -21,4 +21,4 @@
 🔗 https://carownershipbackendapi-production.up.railway.app/docs
 
 ### Mockup of Growth of Car Ownership in Line graph
-![img](expected_linegraph.png)
+![img](car_ownership_trend_mel.png)
