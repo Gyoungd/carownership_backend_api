@@ -19,3 +19,6 @@
 
 ### API Swagger UI
 🔗 https://carownershipbackendapi-production.up.railway.app/docs
+
+### Mockup of Growth of Car Ownership in Line graph
+![img](expected_linegraph.png)
