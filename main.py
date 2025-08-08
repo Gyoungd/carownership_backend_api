@@ -3,7 +3,7 @@ import pandas as pd
 
 app = FastAPI()
 
-df = pd.read_csv('passengercar_ownership_cleaned.csv')
+df = pd.read_csv('paasengercar_ownership_cleaned.csv')
 
 @app.get("/ownership")
 def get_all_ownership():
