@@ -1,7 +1,22 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",  # Vite dev server
+    "https://<프론트엔드_배포_도메인>",  # 실제 배포 주소
+    "*"  # 모든 도메인 허용 (개발 중 임시)
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 df = pd.read_csv('paasengercar_ownership_cleaned.csv')
 
