@@ -1,39 +1,36 @@
 const express = require('express');
 const path = require('path');
-const app = express();
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS middleware
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+// 정적 파일 서빙 (dist 또는 현재 디렉토리)
+app.use(express.static(path.join(__dirname)));
 
-// Serve static files from current directory
-app.use(express.static(__dirname));
+// API 요청을 백엔드로 프록시
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: process.env.BACKEND_URL || 'https://carownershipbackendapi-production.up.railway.app', // Railway 백엔드 서비스 URL
+    changeOrigin: true,
+  })
+);
 
-// Route handlers for specific HTML files
+// 라우트 처리
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-
 app.get('/services.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'services.html'));
 });
-
 app.get('/population.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'population.html'));
 });
-
-// Catch all route - serve index.html for SPA behavior
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
   console.log(`🚀 Frontend server running on port ${PORT}`);
-  console.log(`📁 Serving files from: ${__dirname}`);
 });

@@ -1,7 +1,7 @@
 // Car Ownership Analytics Dashboard
 class CarOwnershipAnalytics {
     constructor() {
-        this.baseURL = 'https://carownershipbackendapi-production.up.railway.app';
+        this.baseURL = '/api';
         this.chart = null;
         this.currentData = null;
         
