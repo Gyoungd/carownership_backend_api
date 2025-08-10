@@ -95,8 +95,15 @@ def get_ownership_by_state_year(state: str, year: int):
 @app.get("/population", tags=["Population"])
 def get_all_population():
     """모든 인구 데이터 반환"""
-    validate_dataframe(population_df, "Population")
-    return population_df.to_dict(orient="records")
+    try:
+        validate_dataframe(population_df, "Population")
+        # DataFrame을 안전하게 변환
+        result = population_df.to_dict(orient="records")
+        print(f"✅ Returning {len(result)} population records")
+        return result
+    except Exception as e:
+        print(f"❌ Error in get_all_population: {e}")
+        raise HTTPException(status_code=500, detail=f"Population data processing error: {str(e)}")
 
 @app.get("/population/{area}", tags=["Population"])
 def get_population_by_area(area: str):

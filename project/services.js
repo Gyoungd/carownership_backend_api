@@ -10,10 +10,13 @@ class CarOwnershipAnalytics {
     }
 
     initializeEventListeners() {
+        const updateButton = document.getElementById('updateChart');
         const stateSelect = document.getElementById('stateSelect');
         const yearSelect = document.getElementById('yearSelect');
 
-        // Real-time updates on selection change
+        updateButton.addEventListener('click', () => this.updateChart());
+        
+        // Auto-update on selection change
         stateSelect.addEventListener('change', () => this.updateChart());
         yearSelect.addEventListener('change', () => this.updateChart());
     }
@@ -83,23 +86,19 @@ class CarOwnershipAnalytics {
         // Process data for chart
         const chartData = this.processDataForChart(data);
 
-        // Determine appropriate label based on state selection
-        const state = document.getElementById('stateSelect').value;
-        const datasetLabel = state ? 'Car Ownership Count' : 'Australia National Car Ownership';
-
         this.chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: chartData.labels,
                 datasets: [{
-                    label: datasetLabel,
+                    label: 'Car Ownership Count',
                     data: chartData.values,
-                    borderColor: '#34699A',
-                    backgroundColor: 'rgba(52, 105, 154, 0.1)',
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#34699A',
+                    pointBackgroundColor: '#2563eb',
                     pointBorderColor: '#ffffff',
                     pointBorderWidth: 2,
                     pointRadius: 6,
@@ -109,46 +108,28 @@ class CarOwnershipAnalytics {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        top: 20,
-                        right: 20,
-                        bottom: 20,
-                        left: 20
-                    }
-                },
                 plugins: {
                     legend: {
                         display: true,
                         position: 'top',
                         labels: {
                             font: {
-                                size: 16,
-                                weight: '600'
-                            },
-                            padding: 20,
-                            color: '#113F67'
+                                size: 14,
+                                weight: '500'
+                            }
                         }
                     },
                     tooltip: {
-                        backgroundColor: 'rgba(17, 63, 103, 0.95)',
-                        titleColor: '#FDF5AA',
-                        titleFont: {
-                            size: 14,
-                            weight: '600'
-                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
                         bodyColor: '#ffffff',
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: '#34699A',
+                        borderColor: '#2563eb',
                         borderWidth: 1,
                         cornerRadius: 8,
-                        padding: 12,
                         displayColors: false,
                         callbacks: {
                             label: function(context) {
-                                return `Ownership: ${context.parsed.y.toLocaleString()} cars`;
+                                return `Ownership: ${context.parsed.y.toLocaleString()}`;
                             }
                         }
                     }
@@ -159,27 +140,12 @@ class CarOwnershipAnalytics {
                             display: true,
                             text: 'Year',
                             font: {
-                                size: 16,
-                                weight: '700'
-                            },
-                            color: '#113F67',
-                            padding: {
-                                top: 15
+                                size: 14,
+                                weight: '600'
                             }
                         },
-                        ticks: {
-                            font: {
-                                size: 14,
-                                weight: '500'
-                            },
-                            color: '#34699A',
-                            padding: 5
-                        },
                         grid: {
-                            color: 'rgba(0, 0, 0, 0.08)',
-                            drawBorder: true,
-                            borderColor: '#d1d5db',
-                            borderWidth: 2
+                            color: 'rgba(0, 0, 0, 0.1)'
                         }
                     },
                     y: {
@@ -187,30 +153,17 @@ class CarOwnershipAnalytics {
                             display: true,
                             text: 'Number of Vehicles',
                             font: {
-                                size: 16,
-                                weight: '700'
-                            },
-                            color: '#113F67',
-                            padding: {
-                                bottom: 15
-                            }
-                        },
-                        ticks: {
-                            font: {
                                 size: 14,
-                                weight: '500'
-                            },
-                            color: '#34699A',
-                            padding: 8,
-                            callback: function(value) {
-                                return value.toLocaleString();
+                                weight: '600'
                             }
                         },
                         grid: {
-                            color: 'rgba(0, 0, 0, 0.08)',
-                            drawBorder: true,
-                            borderColor: '#d1d5db',
-                            borderWidth: 2
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
                         }
                     }
                 },
@@ -229,14 +182,7 @@ class CarOwnershipAnalytics {
             return { labels: [], values: [] };
         }
 
-        const state = document.getElementById('stateSelect').value;
-        
-        // If no state selected (Australia National), aggregate by year
-        if (!state) {
-            return this.aggregateNationalData(data);
-        }
-
-        // Sort by Year and extract labels and values for specific state
+        // Sort by Year and extract labels and values
         const processedData = [...data].sort((a, b) => {
             const yearA = parseInt(a.Year || 0);
             const yearB = parseInt(b.Year || 0);
@@ -244,29 +190,8 @@ class CarOwnershipAnalytics {
         });
 
         const labels = processedData.map(item => item.Year.toString());
-        const values = processedData.map(item => parseInt(item.Total_cars || 0));
-
-        return { labels, values };
-    }
-
-    aggregateNationalData(data) {
-        // Group by year and sum all states' totals
-        const yearTotals = {};
         
-        data.forEach(item => {
-            const year = item.Year.toString();
-            const cars = parseInt(item.Total_cars || 0);
-            
-            if (!yearTotals[year]) {
-                yearTotals[year] = 0;
-            }
-            yearTotals[year] += cars;
-        });
-
-        // Sort years and create arrays
-        const sortedYears = Object.keys(yearTotals).sort((a, b) => parseInt(a) - parseInt(b));
-        const labels = sortedYears;
-        const values = sortedYears.map(year => yearTotals[year]);
+        const values = processedData.map(item => parseInt(item.Total_cars || 0));
 
         return { labels, values };
     }
@@ -277,20 +202,10 @@ class CarOwnershipAnalytics {
             return;
         }
 
-        const state = document.getElementById('stateSelect').value;
-        let values, labels;
-        
-        // If no state selected (Australia National), use aggregated data
-        if (!state) {
-            const aggregatedData = this.aggregateNationalData(data);
-            values = aggregatedData.values;
-            labels = aggregatedData.labels;
-        } else {
-            // Sort data by year for proper analysis
-            const sortedData = [...data].sort((a, b) => a.Year - b.Year);
-            values = sortedData.map(item => parseInt(item.Total_cars || 0));
-            labels = sortedData.map(item => item.Year.toString());
-        }
+        // Sort data by year for proper analysis
+        const sortedData = [...data].sort((a, b) => a.Year - b.Year);
+        const values = sortedData.map(item => parseInt(item.Total_cars || 0));
+        const labels = sortedData.map(item => item.Year.toString());
 
         if (values.length === 0) {
             this.showNoDataMessage();
@@ -366,17 +281,15 @@ class CarOwnershipAnalytics {
     updateTrendAnalysis(values, labels, growthRate) {
         let analysis = '';
         
-        const state = document.getElementById('stateSelect').value;
-        const stateName = state === 'VIC' ? 'Melbourne' : 
-                         state ? document.getElementById('stateSelect').selectedOptions[0].text : 'Australia National';
+        const state = document.getElementById('stateSelect').value || 'All States';
         const year = document.getElementById('yearSelect').value;
         
         if (state && year) {
-            analysis = `Analysis for ${stateName} in ${year}: `;
+            analysis = `Analysis for ${state} in ${year}: `;
         } else if (state) {
-            analysis = `Analysis for ${stateName}: `;
+            analysis = `Analysis for ${state}: `;
         } else {
-            analysis = `Analysis for ${stateName}: `;
+            analysis = 'Analysis: ';
         }
 
         if (values.length > 1) {
@@ -406,14 +319,11 @@ class CarOwnershipAnalytics {
 
     updateTitle() {
         const state = document.getElementById('stateSelect').value;
-        const stateName = state === 'VIC' ? 'Melbourne' : 
-                         state ? document.getElementById('stateSelect').selectedOptions[0].text : 'Australia National';
+        const stateName = state ? document.getElementById('stateSelect').selectedOptions[0].text : 'All States';
         
         let title = 'Car Ownership Trends';
         
         if (state) {
-            title = `Car Ownership Trends - ${stateName}`;
-        } else {
             title = `Car Ownership Trends - ${stateName}`;
         }
         

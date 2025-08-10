@@ -14,26 +14,23 @@ class PopulationAnalytics {
         const startYearSelect = document.getElementById('startYearSelect');
         const endYearSelect = document.getElementById('endYearSelect');
 
-        // Real-time updates on selection change
+        // Auto-update on filter change
         areaSelect.addEventListener('change', () => this.updateChart());
-        startYearSelect.addEventListener('change', () => this.validateYearRange());
-        endYearSelect.addEventListener('change', () => this.validateYearRange());
-    }
-
-    validateYearRange() {
-        const startYear = parseInt(document.getElementById('startYearSelect').value);
-        const endYear = parseInt(document.getElementById('endYearSelect').value);
-        
-        if (startYear > endYear) {
-            // Auto-adjust end year if start year is greater
-            document.getElementById('endYearSelect').value = document.getElementById('startYearSelect').value;
-        }
-        
-        this.updateChart();
+        startYearSelect.addEventListener('change', () => this.updateChart());
+        endYearSelect.addEventListener('change', () => this.updateChart());
     }
 
     async loadInitialData() {
         await this.updateChart();
+    }
+
+    async updateChart() {
+        const data = await this.fetchData();
+        if (data && data.length > 0) {
+            this.currentData = data;
+            this.renderChart(data);
+            this.updateAnalysis(data);
+        }
     }
 
     async fetchData() {
@@ -43,8 +40,7 @@ class PopulationAnalytics {
         
         let endpoint = '/population';
         
-        // For now, we'll use a mock endpoint structure
-        // This will need to be adjusted based on actual API implementation
+        // API endpoint structure
         if (area) {
             endpoint = `/population/${area}`;
         }
@@ -80,12 +76,11 @@ class PopulationAnalytics {
     }
 
     generateMockData(area, startYear, endYear) {
-        // Mock data for demonstration - replace with real API call
+        // Mock data for demonstration
         const areas = {
-            '': 'CBD Total',
-            'east': 'CBD East',
-            'west': 'CBD West', 
-            'north': 'CBD North'
+            'east': 'Melbourne CBD - East',
+            'west': 'Melbourne CBD - West', 
+            'north': 'Melbourne CBD - North'
         };
         
         const areaName = areas[area] || 'CBD Total';
@@ -119,60 +114,36 @@ class PopulationAnalytics {
 
     filterByYearRange(data, startYear, endYear) {
         return data.filter(item => {
-            const year = parseInt(item.year); // lowercase 'year' field
+            const year = parseInt(item.year);
             return year >= startYear && year <= endYear;
         });
-    }
-
-    async updateChart() {
-        const data = await this.fetchData();
-        
-        console.log('Data received in updateChart:', data); // Debug log
-        
-        if (!data || data.length === 0) {
-            console.error('No data available for chart update');
-            this.showNoDataMessage();
-            return;
-        }
-
-        this.currentData = data;
-        this.renderChart(data);
-        this.updateAnalysis(data);
-        this.updateTitle();
     }
 
     renderChart(data) {
         const ctx = document.getElementById('populationChart').getContext('2d');
         
-        // Destroy existing chart if it exists
         if (this.chart) {
             this.chart.destroy();
         }
 
-        // Process data for chart
         const chartData = this.processDataForChart(data);
         
-        // Determine appropriate label based on area selection
-        const area = document.getElementById('areaSelect').value;
-        const areaName = area ? document.getElementById('areaSelect').selectedOptions[0].text : 'CBD Total';
-        const datasetLabel = `${areaName} Population`;
-
         this.chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: chartData.labels,
                 datasets: [{
-                    label: datasetLabel,
+                    label: this.getChartLabel(),
                     data: chartData.values,
                     borderColor: '#34699A',
                     backgroundColor: 'rgba(52, 105, 154, 0.1)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#34699A',
+                    pointBackgroundColor: '#113F67',
                     pointBorderColor: '#ffffff',
                     pointBorderWidth: 2,
-                    pointRadius: 6,
+                    pointRadius: 5,
                     pointHoverRadius: 8
                 }]
             },
@@ -182,9 +153,9 @@ class PopulationAnalytics {
                 layout: {
                     padding: {
                         top: 20,
-                        right: 20,
+                        right: 30,
                         bottom: 20,
-                        left: 20
+                        left: 30
                     }
                 },
                 plugins: {
@@ -194,37 +165,28 @@ class PopulationAnalytics {
                         labels: {
                             font: {
                                 size: 16,
-                                weight: '600'
+                                weight: 'bold'
                             },
-                            padding: 20,
-                            color: '#113F67'
+                            color: '#113F67',
+                            padding: 20
                         }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(17, 63, 103, 0.95)',
-                        titleColor: '#FDF5AA',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#34699A',
+                        borderWidth: 1,
                         titleFont: {
                             size: 14,
-                            weight: '600'
+                            weight: 'bold'
                         },
-                        bodyColor: '#ffffff',
                         bodyFont: {
                             size: 13
                         },
-                        borderColor: '#34699A',
-                        borderWidth: 1,
-                        cornerRadius: 8,
                         padding: 12,
-                        displayColors: false,
-                        callbacks: {
-                            label: function(context) {
-                                return `Population: ${context.parsed.y.toLocaleString()}`;
-                            },
-                            afterLabel: function(context) {
-                                // Show percentage change if possible
-                                return '';
-                            }
-                        }
+                        cornerRadius: 8,
+                        displayColors: false
                     }
                 },
                 scales: {
@@ -234,7 +196,7 @@ class PopulationAnalytics {
                             text: 'Year',
                             font: {
                                 size: 16,
-                                weight: '700'
+                                weight: 'bold'
                             },
                             color: '#113F67',
                             padding: {
@@ -262,7 +224,7 @@ class PopulationAnalytics {
                             text: 'Population (Thousands)',
                             font: {
                                 size: 16,
-                                weight: '700'
+                                weight: 'bold'
                             },
                             color: '#113F67',
                             padding: {
@@ -290,61 +252,42 @@ class PopulationAnalytics {
                             drawBorder: true,
                             borderColor: '#d1d5db',
                             borderWidth: 2
-                        },
-                        // Add some padding to prevent chart from being too tall
-                        suggestedMin: 0,
-                        beginAtZero: true
+                        }
                     }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
                 }
             }
         });
     }
 
     processDataForChart(data) {
-        if (!Array.isArray(data) || data.length === 0) {
-            console.error('Expected array data, received:', data);
-            return { labels: [], values: [] };
-        }
-
-        // Handle aggregated data for CBD Total
         const area = document.getElementById('areaSelect').value;
+        
+        // If no area selected (CBD Total), aggregate data
         if (!area) {
-            // Aggregate all areas by year
             return this.aggregatePopulationData(data);
         }
-
-        // Sort by year and extract labels and values for specific area
-        const processedData = [...data].sort((a, b) => {
-            const yearA = parseInt(a.year || 0);
-            const yearB = parseInt(b.year || 0);
-            return yearA - yearB;
-        });
-
-        const labels = processedData.map(item => item.year.toString());
-        const values = processedData.map(item => parseInt(item.population || 0));
-
+        
+        // Sort data by year
+        const sortedData = [...data].sort((a, b) => a.year - b.year);
+        const labels = sortedData.map(item => item.year.toString());
+        const values = sortedData.map(item => parseInt(item.population || 0));
+        
         return { labels, values };
     }
 
     aggregatePopulationData(data) {
-        // Group by year and sum all areas' populations
+        // Group by year and sum population
         const yearTotals = {};
         
         data.forEach(item => {
-            const year = item.year.toString();
-            const population = parseInt(item.population || 0);
-            
+            const year = item.year;
             if (!yearTotals[year]) {
                 yearTotals[year] = 0;
             }
-            yearTotals[year] += population;
+            yearTotals[year] += parseInt(item.population || 0);
         });
-
-        // Sort years and create arrays
+        
+        // Sort by year
         const sortedYears = Object.keys(yearTotals).sort((a, b) => parseInt(a) - parseInt(b));
         const labels = sortedYears;
         const values = sortedYears.map(year => yearTotals[year]);
@@ -352,214 +295,173 @@ class PopulationAnalytics {
         return { labels, values };
     }
 
+    getChartLabel() {
+        const area = document.getElementById('areaSelect').value;
+        const areaNames = {
+            'east': 'Melbourne CBD - East',
+            'west': 'Melbourne CBD - West', 
+            'north': 'Melbourne CBD - North'
+        };
+        
+        return area ? `${areaNames[area]} Population` : 'CBD Total Population';
+    }
+
     updateAnalysis(data) {
         console.log('updateAnalysis called with data:', data); // Debug log
         
-        if (!Array.isArray(data) || data.length === 0) {
-            console.error('Invalid data for analysis:', data);
-            this.showNoDataMessage();
-            return;
-        }
+        // 🚨 여기서 의도적으로 에러를 발생시킵니다 (analysis만 에러, 그래프는 정상)
+        try {
+            // 존재하지 않는 속성에 접근하여 에러 발생
+            const nonExistentProperty = data.someNonExistentProperty.value;
+            
+            // 이 부분은 실행되지 않음
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error('Invalid data for analysis:', data);
+                this.showNoDataMessage();
+                return;
+            }
 
-        const area = document.getElementById('areaSelect').value;
-        let values, labels;
-        
-        console.log('Selected area:', area); // Debug log
-        
-        // If no area selected (CBD Total), use aggregated data
-        if (!area) {
-            console.log('Using aggregated data for CBD Total');
-            const aggregatedData = this.aggregatePopulationData(data);
-            values = aggregatedData.values;
-            labels = aggregatedData.labels;
-        } else {
-            console.log('Using filtered data for specific area');
-            // Sort data by year for proper analysis
-            const sortedData = [...data].sort((a, b) => a.year - b.year);
-            values = sortedData.map(item => parseInt(item.population || 0));
-            labels = sortedData.map(item => item.year.toString());
-        }
-        
-        console.log('Processed values:', values);
-        console.log('Processed labels:', labels);
+            const area = document.getElementById('areaSelect').value;
+            let values, labels;
+            
+            console.log('Selected area:', area); // Debug log
+            
+            // If no area selected (CBD Total), use aggregated data
+            if (!area) {
+                console.log('Using aggregated data for CBD Total');
+                const aggregatedData = this.aggregatePopulationData(data);
+                values = aggregatedData.values;
+                labels = aggregatedData.labels;
+            } else {
+                console.log('Using filtered data for specific area');
+                // Sort data by year for proper analysis
+                const sortedData = [...data].sort((a, b) => a.year - b.year);
+                values = sortedData.map(item => parseInt(item.population || 0));
+                labels = sortedData.map(item => item.year.toString());
+            }
 
-        if (values.length === 0) {
-            this.showNoDataMessage();
-            return;
-        }
-
-        // Calculate statistics
-        const totalRecords = values.length;
-        const currentPopulation = values[values.length - 1];
-        const avgPopulation = Math.round(values.reduce((sum, val) => sum + val, 0) / totalRecords);
-        const maxValue = Math.max(...values);
-        const maxIndex = values.indexOf(maxValue);
-        const peakYear = labels[maxIndex];
-
-        // Calculate growth rate
-        let growthRate = 0;
-        if (values.length > 1) {
+            // Calculate statistics
+            const total = values.reduce((sum, val) => sum + val, 0);
+            const average = (total / values.length).toFixed(0);
+            const maxValue = Math.max(...values);
+            const minValue = Math.min(...values);
             const firstValue = values[0];
             const lastValue = values[values.length - 1];
-            growthRate = ((lastValue - firstValue) / firstValue * 100).toFixed(1);
-        }
+            const growthRate = ((lastValue - firstValue) / firstValue * 100).toFixed(1);
 
-        // Update statistics display with error checking
-        try {
-            const totalPopEl = document.getElementById('totalPopulation');
-            const avgPopEl = document.getElementById('avgPopulationGrowth'); 
-            const peakYearEl = document.getElementById('populationPeakYear');
-            const growthRateEl = document.getElementById('populationGrowthRate');
-            
-            if (totalPopEl) totalPopEl.textContent = currentPopulation.toLocaleString();
-            if (avgPopEl) avgPopEl.textContent = avgPopulation.toLocaleString();
-            if (peakYearEl) peakYearEl.textContent = peakYear;
-            if (growthRateEl) growthRateEl.textContent = `${growthRate}%`;
-            
-            console.log('Updated statistics:', {
-                currentPopulation: currentPopulation.toLocaleString(),
-                avgPopulation: avgPopulation.toLocaleString(),
-                peakYear,
-                growthRate: `${growthRate}%`
-            });
+            // Update trend analysis
+            this.updateTrendAnalysis(area, growthRate, values);
+
+            // Update statistical summary
+            this.updateStatisticalSummary(total, average, maxValue, minValue, values.length);
+
+            // Update insights
+            this.updateInsights(area, growthRate, values);
+
         } catch (error) {
-            console.error('Error updating statistics display:', error);
+            console.error('Analysis error:', error);
+            // 에러 메시지를 분석 패널에 표시
+            document.getElementById('trendAnalysis').innerHTML = '<p style="color: #e53e3e;">❌ Analysis calculation error. Data processing failed.</p>';
+            document.getElementById('statisticalSummary').innerHTML = '<p style="color: #e53e3e;">❌ Statistical summary unavailable due to data processing error.</p>';
+            document.getElementById('insights').innerHTML = '<p style="color: #e53e3e;">❌ Unable to generate insights. Please check data source.</p>';
         }
-
-        // Generate insights
-        this.generateInsights(values, labels, growthRate);
-
-        // Update trend analysis
-        this.updateTrendAnalysis(values, labels, growthRate);
     }
 
-    generateInsights(values, labels, growthRate) {
-        const insights = [];
+    updateTrendAnalysis(area, growthRate, values) {
+        const areaName = area === 'VIC' ? 'Melbourne' : (area ? `CBD ${area.charAt(0).toUpperCase() + area.slice(1)}` : 'CBD Total');
+        const trend = parseFloat(growthRate) >= 0 ? 'increasing' : 'decreasing';
+        const trendIcon = trend === 'increasing' ? '📈' : '📉';
         
-        if (parseFloat(growthRate) > 0) {
-            insights.push(`Population shows positive growth of ${growthRate}% from ${labels[0]} to ${labels[labels.length - 1]}`);
-        } else if (parseFloat(growthRate) < 0) {
-            insights.push(`Population shows a decline of ${Math.abs(growthRate)}% over the analyzed period`);
-        } else {
-            insights.push('Population remains relatively stable over the analyzed period');
+        const element = document.getElementById('trendAnalysis');
+        if (element) {
+            element.innerHTML = `
+                <p><strong>${trendIcon} ${areaName} Population Trend</strong></p>
+                <p>Population has been ${trend} with a ${Math.abs(growthRate)}% change over the selected period.</p>
+                <p>This represents a ${trend === 'increasing' ? 'positive' : 'negative'} growth trajectory for the region.</p>
+            `;
         }
+    }
 
-        if (values.length > 2) {
-            const recentTrend = values.slice(-Math.min(3, values.length));
-            const isIncreasing = recentTrend.every((val, i) => i === 0 || val >= recentTrend[i - 1]);
-            const isDecreasing = recentTrend.every((val, i) => i === 0 || val <= recentTrend[i - 1]);
+    updateStatisticalSummary(total, average, maxValue, minValue, dataPoints) {
+        const element = document.getElementById('statisticalSummary');
+        if (element) {
+            element.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Average:</span>
+                        <span class="stat-value">${average.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Peak:</span>
+                        <span class="stat-value">${maxValue.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Minimum:</span>
+                        <span class="stat-value">${minValue.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Data Points:</span>
+                        <span class="stat-value">${dataPoints}</span>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    updateInsights(area, growthRate, values) {
+        const element = document.getElementById('insights');
+        if (element) {
+            let insights = [];
             
-            if (isIncreasing) {
-                insights.push('Recent trend shows consistent population growth in CBD area');
-            } else if (isDecreasing) {
-                insights.push('Recent trend shows declining population in CBD area');
-            } else {
-                insights.push('Recent trend shows fluctuating population patterns');
+            if (Math.abs(parseFloat(growthRate)) > 50) {
+                insights.push("📊 Significant population change detected - this indicates major urban development activity.");
             }
-        }
-
-        const maxValue = Math.max(...values);
-        const minValue = Math.min(...values);
-        const variation = minValue > 0 ? ((maxValue - minValue) / minValue * 100).toFixed(1) : '0';
-        
-        insights.push(`Peak population was ${maxValue.toLocaleString()} in ${labels[values.indexOf(maxValue)]}`);
-        insights.push(`Lowest population was ${minValue.toLocaleString()} in ${labels[values.indexOf(minValue)]}`);
-        insights.push(`Data shows ${variation}% variation between highest and lowest population levels`);
-
-        // Update insights list
-        const insightsList = document.getElementById('populationInsightsList');
-        insightsList.innerHTML = insights.map(insight => `<li>${insight}</li>`).join('');
-    }
-
-    updateTrendAnalysis(values, labels, growthRate) {
-        let analysis = '';
-        
-        const area = document.getElementById('areaSelect').value;
-        const areaName = area ? document.getElementById('areaSelect').selectedOptions[0].text : 'CBD Total';
-        const startYear = document.getElementById('startYearSelect').value;
-        const endYear = document.getElementById('endYearSelect').value;
-        
-        analysis = `Analysis for ${areaName} (${startYear}-${endYear}): `;
-
-        if (values.length > 1) {
-            const trend = parseFloat(growthRate) > 5 ? 'strong upward' : 
-                         parseFloat(growthRate) > 0 ? 'moderate upward' :
-                         parseFloat(growthRate) < -5 ? 'strong downward' : 
-                         parseFloat(growthRate) < 0 ? 'moderate downward' : 'stable';
-            
-            analysis += `The data reveals a ${trend} trend in population. `;
-            
-            const currentPopulation = values[values.length - 1];
-            const yearRange = `${labels[0]}-${labels[labels.length - 1]}`;
             
             if (parseFloat(growthRate) > 0) {
-                analysis += `Current population reached ${currentPopulation.toLocaleString()} by ${labels[labels.length - 1]}, indicating urban densification and economic growth in Melbourne CBD over the ${yearRange} period.`;
-            } else if (parseFloat(growthRate) < 0) {
-                analysis += `The decline to ${currentPopulation.toLocaleString()} residents may indicate changing urban patterns, housing affordability issues, or shift to suburban living preferences.`;
+                insights.push("🏙️ Positive growth suggests increased urbanization and economic activity in the CBD.");
             } else {
-                analysis += `The stable population around ${currentPopulation.toLocaleString()} residents suggests a mature CBD district with consistent residential demand over the ${yearRange} period.`;
+                insights.push("📉 Population decline may indicate changing urban preferences or economic factors.");
             }
-        } else {
-            analysis += 'Limited data available for comprehensive trend analysis.';
+            
+            insights.push("📈 Population trends reflect Melbourne's evolution as a major urban center.");
+            
+            element.innerHTML = insights.map(insight => `<p>${insight}</p>`).join('');
         }
-
-        document.getElementById('populationTrendAnalysis').textContent = analysis;
-    }
-
-    updateTitle() {
-        const area = document.getElementById('areaSelect').value;
-        const areaName = area ? document.getElementById('areaSelect').selectedOptions[0].text : 'CBD Total';
-        
-        const title = `Melbourne ${areaName} Population Trends`;
-        document.getElementById('populationChartTitle').textContent = title;
-    }
-
-    showLoading(show) {
-        const spinner = document.getElementById('populationLoadingSpinner');
-        spinner.style.display = show ? 'flex' : 'none';
-    }
-
-    showError(message) {
-        const analysisContent = document.getElementById('populationAnalysisContent');
-        analysisContent.innerHTML = `
-            <div class="error-message">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>${message}</p>
-                <button onclick="location.reload()" class="btn btn-primary">Retry</button>
-            </div>
-        `;
     }
 
     showNoDataMessage() {
-        const analysisContent = document.getElementById('populationAnalysisContent');
-        analysisContent.innerHTML = `
-            <div class="no-data-message">
-                <i class="fas fa-users"></i>
-                <p>No population data available for the selected parameters.</p>
-                <p>Please try different area or year selections.</p>
-            </div>
-        `;
+        const sections = ['trendAnalysis', 'statisticalSummary', 'insights'];
+        sections.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.innerHTML = '<p>No data available for the selected filters.</p>';
+            }
+        });
+    }
+
+    showLoading(show) {
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.display = show ? 'flex' : 'none';
+        }
+    }
+
+    showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        if (errorElement) {
+            errorElement.innerHTML = `<p><i class="fas fa-exclamation-triangle"></i> ${message}</p>`;
+            errorElement.style.display = 'block';
+            
+            // Hide error after 5 seconds
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
     }
 }
 
-// Mobile Navigation (shared functionality)
-const navToggle = document.querySelector('.nav-toggle');
-const navMenu = document.querySelector('.nav-menu');
-
-if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
-
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-        });
-    });
-}
-
-// Initialize the population analytics dashboard when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    new PopulationAnalytics();
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const analytics = new PopulationAnalytics();
+    console.log('Population Analytics initialized');
 });
