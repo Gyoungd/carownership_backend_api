@@ -1,7 +1,7 @@
 // Melbourne CBD Population Analytics Dashboard
 class PopulationAnalytics {
     constructor() {
-        this.baseURL = '/api';
+        this.baseURL = 'https://carownershipbackendapi-production.up.railway.app';
         this.chart = null;
         this.currentData = null;
         
