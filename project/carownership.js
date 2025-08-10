@@ -56,7 +56,6 @@ class CarOwnershipAnalytics {
         this.currentData = data;
         this.renderChart(data);
         this.updateAnalysis(data);
-        this.updateTitle();
     }
 
     renderChart(data) {
@@ -282,27 +281,6 @@ class CarOwnershipAnalytics {
         }
 
         document.getElementById('trendAnalysis').textContent = analysis;
-    }
-
-    updateTitle() {
-        // Show dynamic insights instead of redundant title
-        const titleElement = document.getElementById('chartTitle');
-        if (titleElement) {
-            // Calculate quick insight from current data
-            if (this.currentData && this.currentData.length > 0) {
-                const firstYear = this.currentData[0];
-                const lastYear = this.currentData[this.currentData.length - 1];
-                const firstValue = firstYear.Total_cars;
-                const lastValue = lastYear.Total_cars;
-                const growthRate = ((lastValue - firstValue) / firstValue * 100).toFixed(1);
-                const trend = parseFloat(growthRate) > 0 ? 'increased' : 'decreased';
-                const icon = parseFloat(growthRate) > 0 ? '📈' : '📉';
-                
-                titleElement.innerHTML = `${icon} Car ownership ${trend} by ${Math.abs(growthRate)}% from ${firstYear.Year} to ${lastYear.Year}`;
-            } else {
-                titleElement.textContent = 'Loading Melbourne car ownership data...';
-            }
-        }
     }
 
     showLoading(show) {
