@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Ownership Analytics - Our Services</title>
+    <title>Car Ownership Analytics - Melbourne Mobility Insights</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,14 +14,13 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <i class="fas fa-rocket"></i>
-                <span>BusinessPro</span>
+                <i class="fas fa-car"></i>
+                <span>Melbourne Mobility Insights</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="index.html#about" class="nav-link">About</a></li>
                 <li><a href="services.html" class="nav-link active">Our Services</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="nav-toggle">
                 <span></span>
@@ -36,7 +35,7 @@
         <div class="container">
             <div class="services-hero-content">
                 <h1>Car Ownership Analytics</h1>
-                <p>Comprehensive analysis of car ownership trends across Australia with real-time data visualization and insights.</p>
+                <p>Comprehensive analysis of car ownership trends in Melbourne and Australia with interactive data visualization powered by ABS datasets.</p>
             </div>
         </div>
     </section>
@@ -45,24 +44,17 @@
     <section class="analytics-dashboard">
         <div class="container">
             <div class="dashboard-header">
-                <h2>Growth of Car Ownership Analytics</h2>
+                <h2>Melbourne Car Ownership Analytics</h2>
                 <p>Interactive data visualization powered by Australian Bureau of Statistics</p>
             </div>
 
             <!-- Controls -->
             <div class="analytics-controls">
                 <div class="control-group">
-                    <label for="stateSelect">Select State:</label>
+                    <label for="stateSelect">Select Region:</label>
                     <select id="stateSelect" class="control-select">
-                        <option value="">All States</option>
-                        <option value="NSW">New South Wales</option>
-                        <option value="VIC">Victoria</option>
-                        <option value="QLD">Queensland</option>
-                        <option value="WA">Western Australia</option>
-                        <option value="SA">South Australia</option>
-                        <option value="TAS">Tasmania</option>
-                        <option value="ACT">Australian Capital Territory</option>
-                        <option value="NT">Northern Territory</option>
+                        <option value="">Australia National</option>
+                        <option value="VIC">Melbourne</option>
                     </select>
                 </div>
                 <div class="control-group">
@@ -93,11 +85,13 @@
                     </div>
                     <canvas id="ownershipChart"></canvas>
                 </div>
+            </div>
 
-                <!-- Analysis Panel -->
-                <div class="analysis-panel">
-                    <h3>Data Analysis & Insights</h3>
-                    <div id="analysisContent" class="analysis-content">
+            <!-- Analysis Panel - Moved Below Chart -->
+            <div class="analysis-panel-bottom">
+                <h3>Data Analysis & Insights</h3>
+                <div id="analysisContent" class="analysis-content-bottom">
+                    <div class="analysis-grid">
                         <div class="analysis-section">
                             <h4><i class="fas fa-chart-line"></i> Key Trends</h4>
                             <p id="trendAnalysis">Select data parameters to view detailed trend analysis and insights.</p>
@@ -171,47 +165,47 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <i class="fas fa-rocket"></i>
-                        <span>BusinessPro</span>
+                        <i class="fas fa-car"></i>
+                        <span>Melbourne Mobility Insights</span>
                     </div>
-                    <p>Empowering businesses with innovative solutions and exceptional service.</p>
+                    <p>Providing clear and accessible data insights on Melbourne's mobility and urban planning challenges.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-linkedin"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Services</h4>
+                    <h4>Analytics</h4>
                     <ul>
-                        <li><a href="#">Data Analytics</a></li>
-                        <li><a href="#">API Integration</a></li>
-                        <li><a href="#">Visualization</a></li>
-                        <li><a href="#">Consulting</a></li>
+                        <li><a href="services.html">Car Ownership Trends</a></li>
+                        <li><a href="#">CBD Population Analysis</a></li>
+                        <li><a href="#">Data Visualization</a></li>
+                        <li><a href="#">ABS Integration</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Company</h4>
+                    <h4>About</h4>
                     <ul>
-                        <li><a href="index.html#about">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">News</a></li>
+                        <li><a href="index.html#about">About Our Team</a></li>
+                        <li><a href="index.html#about">Our Mission</a></li>
+                        <li><a href="#">Methodology</a></li>
+                        <li><a href="#">Data Sources</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="index.html#contact">Contact Us</a></li>
-                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Data Access</a></li>
                         <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Documentation</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 BusinessPro. All rights reserved.</p>
+                <p>&copy; 2024 Melbourne Mobility Insights. All rights reserved.</p>
             </div>
         </div>
     </footer>

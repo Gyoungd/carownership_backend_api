@@ -1,3 +1,18 @@
+/* Color Palette Variables - Melbourne Mobility Insights */
+:root {
+    --primary-dark: #113F67;     /* Dark Navy Blue - Primary text, headers */
+    --primary-medium: #34699A;   /* Medium Blue - Buttons, accents */
+    --primary-light: #58A0C8;    /* Light Blue - Links, highlights */
+    --text-primary: #113F67;     /* Dark navy for main text */
+    --text-secondary: #34699A;   /* Medium blue for secondary text */
+    --text-muted: #6b7280;       /* Gray for muted text */
+    --background-white: #ffffff;
+    --background-light: #f8fafc;
+    --background-section: #f9fafb;
+    --border-light: #e5e7eb;
+    --border-medium: #d1d5db;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -8,7 +23,8 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
-    color: #333;
+    color: var(--text-primary);
+    background-color: var(--background-white);
     overflow-x: hidden;
 }
 
@@ -19,7 +35,8 @@ body {
     width: 100%;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: 0 2px 10px rgba(17, 63, 103, 0.1);
     z-index: 1000;
     transition: all 0.3s ease;
 }
@@ -40,7 +57,7 @@ body {
     gap: 10px;
     font-size: 24px;
     font-weight: 700;
-    color: #2563eb;
+    color: var(--text-primary);
 }
 
 .nav-logo i {
@@ -55,14 +72,14 @@ body {
 
 .nav-link {
     text-decoration: none;
-    color: #374151;
+    color: var(--text-primary);
     font-weight: 500;
     transition: color 0.3s ease;
     position: relative;
 }
 
 .nav-link:hover {
-    color: #2563eb;
+    color: var(--primary-light);
 }
 
 .nav-link::after {
@@ -72,7 +89,7 @@ body {
     height: 2px;
     bottom: -5px;
     left: 0;
-    background: #2563eb;
+    background: var(--primary-medium);
     transition: width 0.3s ease;
 }
 
@@ -110,15 +127,16 @@ body {
 .section-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-primary);
     margin-bottom: 16px;
 }
 
 .section-header p {
     font-size: 1.2rem;
-    color: #6b7280;
+    color: var(--text-muted);
     max-width: 600px;
     margin: 0 auto;
+    line-height: 1.7;
 }
 
 /* Hero Section */
@@ -126,7 +144,7 @@ body {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
     color: white;
     position: relative;
     overflow: hidden;
@@ -204,33 +222,33 @@ body {
 }
 
 .btn-primary {
-    background: #2563eb;
+    background: var(--primary-medium);
     color: white;
-    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 6px rgba(52, 105, 154, 0.3);
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
+    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 6px 12px rgba(17, 63, 103, 0.4);
 }
 
 .btn-secondary {
     background: transparent;
-    color: white;
-    border: 2px solid white;
+    color: var(--primary-medium);
+    border: 2px solid var(--primary-medium);
 }
 
 .btn-secondary:hover {
-    background: white;
-    color: #2563eb;
+    background: var(--primary-medium);
+    color: white;
     transform: translateY(-2px);
 }
 
 /* About Section */
 .about {
     padding: 100px 0;
-    background: #f9fafb;
+    background: var(--background-section);
 }
 
 .about-content {
@@ -243,12 +261,12 @@ body {
 .about-text h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-primary);
     margin-bottom: 16px;
 }
 
 .about-text p {
-    color: #6b7280;
+    color: var(--text-muted);
     margin-bottom: 32px;
     line-height: 1.7;
 }
@@ -262,11 +280,11 @@ body {
     align-items: center;
     gap: 12px;
     margin-bottom: 12px;
-    color: #374151;
+    color: var(--text-secondary);
 }
 
 .about-list i {
-    color: #10b981;
+    color: var(--primary-light);
     font-size: 1.1rem;
 }
 
@@ -292,7 +310,7 @@ body {
 .stat-number {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #2563eb;
+    color: var(--primary-medium);
     margin-bottom: 8px;
 }
 
@@ -313,24 +331,44 @@ body {
 }
 
 .service-card {
-    background: white;
+    background: var(--background-white);
     padding: 40px 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(17, 63, 103, 0.08);
     text-align: center;
     transition: all 0.3s ease;
-    border: 1px solid #f3f4f6;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    position: relative;
+}
+
+.service-card-coming-soon {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.coming-soon-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-medium);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .service-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 40px rgba(17, 63, 103, 0.15);
+    border-color: var(--primary-light);
 }
 
 .service-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, var(--primary-medium), var(--primary-light));
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -346,12 +384,12 @@ body {
 .service-card h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-primary);
     margin-bottom: 16px;
 }
 
 .service-card p {
-    color: #6b7280;
+    color: var(--text-muted);
     margin-bottom: 24px;
     line-height: 1.6;
 }
@@ -362,7 +400,7 @@ body {
 }
 
 .service-card li {
-    color: #374151;
+    color: var(--text-secondary);
     margin-bottom: 8px;
     position: relative;
     padding-left: 20px;
@@ -370,7 +408,7 @@ body {
 
 .service-card li::before {
     content: '•';
-    color: #10b981;
+    color: var(--primary-light);
     position: absolute;
     left: 0;
     font-weight: bold;
@@ -574,7 +612,7 @@ body {
 
 /* Services Page Styles */
 .services-hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
     color: white;
     padding: 120px 0 80px;
     text-align: center;
@@ -595,7 +633,7 @@ body {
 
 .analytics-dashboard {
     padding: 80px 0;
-    background: #f9fafb;
+    background: var(--background-section);
 }
 
 .dashboard-header {
@@ -606,13 +644,13 @@ body {
 .dashboard-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-primary);
     margin-bottom: 16px;
 }
 
 .dashboard-header p {
     font-size: 1.2rem;
-    color: #6b7280;
+    color: var(--text-muted);
 }
 
 .analytics-controls {
@@ -654,17 +692,18 @@ body {
 }
 
 .analytics-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 40px;
-    margin-bottom: 60px;
+    display: block;
+    margin-bottom: 40px;
 }
 
 .chart-container {
-    background: white;
-    padding: 30px;
+    background: var(--background-white);
+    padding: 40px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(17, 63, 103, 0.08);
+    border: 1px solid var(--border-light);
+    margin-bottom: 40px;
+    min-height: 600px;
 }
 
 .chart-header {
@@ -692,21 +731,46 @@ body {
 }
 
 #ownershipChart {
-    height: 400px !important;
+    height: 500px !important;
+    width: 100% !important;
 }
 
+/* Original analysis-panel kept for compatibility */
 .analysis-panel {
-    background: white;
+    background: var(--background-white);
     padding: 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(17, 63, 103, 0.08);
+    border: 1px solid var(--border-light);
     height: fit-content;
 }
 
-.analysis-panel h3 {
+/* New analysis panel positioned below chart */
+.analysis-panel-bottom {
+    background: var(--background-white);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(17, 63, 103, 0.08);
+    border: 1px solid var(--border-light);
+    margin-bottom: 40px;
+}
+
+.analysis-content-bottom {
+    display: block;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.analysis-panel h3,
+.analysis-panel-bottom h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--primary-dark);
     margin-bottom: 25px;
 }
 
@@ -733,7 +797,7 @@ body {
 }
 
 .analysis-section h4 i {
-    color: #2563eb;
+    color: var(--primary-light);
 }
 
 .stats-grid {
@@ -855,7 +919,7 @@ body {
 }
 
 .nav-link.active {
-    color: #2563eb;
+    color: var(--primary-medium);
     font-weight: 600;
 }
 
@@ -948,8 +1012,21 @@ body {
     }
     
     .analytics-content {
+        margin-bottom: 30px;
+    }
+    
+    .analysis-grid {
         grid-template-columns: 1fr;
         gap: 30px;
+    }
+    
+    .chart-container {
+        padding: 20px;
+        min-height: 400px;
+    }
+    
+    .analysis-panel-bottom {
+        padding: 20px;
     }
     
     .stats-grid {
