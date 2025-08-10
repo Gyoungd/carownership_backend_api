@@ -1,11 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
+import os
+from typing import Optional
 
 app = FastAPI(
-    title="Car Ownership API",
-    description="ABS Annual Car Ownership dataset API (2016–2021)",
-    version="1.0.0"
+    title="Melbourne Mobility Insights API",
+    description="ABS datasets API for Melbourne car ownership and population analytics (2016–2021)",
+    version="2.0.0"
 )
 
 # ✅ CORS 설정
@@ -23,26 +25,136 @@ app.add_middleware(
     allow_headers=["*"],  # 모든 헤더 허용
 )
 
-# ✅ CSV 데이터 로드
-df = pd.read_csv('paasengercar_ownership_cleaned.csv')
+# ✅ 데이터 로딩 함수
+def load_data():
+    """데이터 파일들을 로드하고 전역 변수로 저장"""
+    global ownership_df, population_df
+    
+    try:
+        # Car Ownership 데이터 로드
+        if os.path.exists('paasengercar_ownership_cleaned.csv'):
+            ownership_df = pd.read_csv('paasengercar_ownership_cleaned.csv')
+            print("✅ Car ownership data loaded successfully")
+        else:
+            print("❌ Car ownership CSV file not found")
+            ownership_df = pd.DataFrame()
+        
+        # Population 데이터 로드  
+        if os.path.exists('population.csv'):
+            population_df = pd.read_csv('population.csv')
+            print("✅ Population data loaded successfully")
+        else:
+            print("❌ Population CSV file not found")
+            population_df = pd.DataFrame()
+            
+    except Exception as e:
+        print(f"❌ Error loading data: {e}")
+        ownership_df = pd.DataFrame()
+        population_df = pd.DataFrame()
 
-# ✅ 엔드포인트: 전체 데이터
-@app.get("/ownership")
+# 데이터 로드 실행
+load_data()
+
+# ✅ 데이터 유효성 검사 함수
+def validate_dataframe(df: pd.DataFrame, data_type: str):
+    """데이터프레임이 비어있는지 확인"""
+    if df.empty:
+        raise HTTPException(status_code=503, detail=f"{data_type} data not available")
+    return True
+
+# ==================== CAR OWNERSHIP ENDPOINTS ====================
+
+@app.get("/ownership", tags=["Car Ownership"])
 def get_all_ownership():
-    return df.to_dict(orient="records")
+    """모든 차량 소유권 데이터 반환"""
+    validate_dataframe(ownership_df, "Car ownership")
+    return ownership_df.to_dict(orient="records")
 
-# ✅ 엔드포인트: 특정 주(state) 데이터
-@app.get("/ownership/{state}")
+@app.get("/ownership/{state}", tags=["Car Ownership"])
 def get_ownership_by_state(state: str):
-    data = df[df['State'].str.lower() == state.lower()]
+    """특정 주의 차량 소유권 데이터 반환"""
+    validate_dataframe(ownership_df, "Car ownership")
+    
+    data = ownership_df[ownership_df['State'].str.lower() == state.lower()]
     if data.empty:
-        raise HTTPException(status_code=404, detail="State not found")
+        raise HTTPException(status_code=404, detail=f"No car ownership data found for state: {state}")
     return data.to_dict(orient="records")
 
-# ✅ 엔드포인트: 특정 주 + 특정 연도 데이터
-@app.get("/ownership/{state}/{year}")
+@app.get("/ownership/{state}/{year}", tags=["Car Ownership"])
 def get_ownership_by_state_year(state: str, year: int):
-    data = df[(df['State'].str.lower() == state.lower()) & (df['Year'] == year)]
+    """특정 주의 특정 연도 차량 소유권 데이터 반환"""
+    validate_dataframe(ownership_df, "Car ownership")
+    
+    data = ownership_df[(ownership_df['State'].str.lower() == state.lower()) & (ownership_df['Year'] == year)]
     if data.empty:
-        raise HTTPException(status_code=404, detail="No data for this state and year")
+        raise HTTPException(status_code=404, detail=f"No car ownership data found for {state} in {year}")
     return data.to_dict(orient="records")
+
+# ==================== POPULATION ENDPOINTS ====================
+
+@app.get("/population", tags=["Population"])
+def get_all_population():
+    """모든 인구 데이터 반환"""
+    validate_dataframe(population_df, "Population")
+    return population_df.to_dict(orient="records")
+
+@app.get("/population/{area}", tags=["Population"])
+def get_population_by_area(area: str):
+    """특정 지역의 인구 데이터 반환 (예: Melbourne CBD East, West, North)"""
+    validate_dataframe(population_df, "Population")
+    
+    # area 컬럼명은 실제 CSV 구조에 맞게 조정 필요
+    area_column = 'Area'  # 실제 컬럼명으로 변경
+    if area_column not in population_df.columns:
+        raise HTTPException(status_code=500, detail="Population data structure error")
+    
+    data = population_df[population_df[area_column].str.lower() == area.lower()]
+    if data.empty:
+        raise HTTPException(status_code=404, detail=f"No population data found for area: {area}")
+    return data.to_dict(orient="records")
+
+@app.get("/population/{area}/{year}", tags=["Population"])
+def get_population_by_area_year(area: str, year: int):
+    """특정 지역의 특정 연도 인구 데이터 반환"""
+    validate_dataframe(population_df, "Population")
+    
+    area_column = 'Area'  # 실제 컬럼명으로 변경
+    year_column = 'Year'  # 실제 컬럼명으로 변경
+    
+    if area_column not in population_df.columns or year_column not in population_df.columns:
+        raise HTTPException(status_code=500, detail="Population data structure error")
+    
+    data = population_df[
+        (population_df[area_column].str.lower() == area.lower()) & 
+        (population_df[year_column] == year)
+    ]
+    if data.empty:
+        raise HTTPException(status_code=404, detail=f"No population data found for {area} in {year}")
+    return data.to_dict(orient="records")
+
+# ==================== UTILITY ENDPOINTS ====================
+
+@app.get("/", tags=["General"])
+def read_root():
+    """API 정보 및 상태 확인"""
+    return {
+        "message": "Melbourne Mobility Insights API",
+        "version": "2.0.0",
+        "available_endpoints": {
+            "car_ownership": ["/ownership", "/ownership/{state}", "/ownership/{state}/{year}"],
+            "population": ["/population", "/population/{area}", "/population/{area}/{year}"]
+        },
+        "data_status": {
+            "car_ownership_loaded": not ownership_df.empty,
+            "population_loaded": not population_df.empty
+        }
+    }
+
+@app.get("/health", tags=["General"])
+def health_check():
+    """서비스 상태 확인"""
+    return {
+        "status": "healthy",
+        "car_ownership_records": len(ownership_df),
+        "population_records": len(population_df)
+    }
