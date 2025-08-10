@@ -249,13 +249,7 @@ class CarOwnershipAnalytics {
             }
         }
 
-        const maxValue = Math.max(...values);
-        const minValue = Math.min(...values);
-        const variation = minValue > 0 ? ((maxValue - minValue) / minValue * 100).toFixed(1) : '0';
-        
-        insights.push(`Peak ownership was ${maxValue.toLocaleString()} cars in ${peakYear}`);
-        insights.push(`Lowest ownership was ${minValue.toLocaleString()} cars in ${labels[values.indexOf(minValue)]}`);
-        insights.push(`Data shows ${variation}% variation between highest and lowest ownership levels`);
+
 
         // Update insights list
         const insightsList = document.getElementById('insightsList');
@@ -291,11 +285,23 @@ class CarOwnershipAnalytics {
     }
 
     updateTitle() {
-        // Fixed title for Melbourne data
-        const title = 'Melbourne Car Ownership Trends (2016-2021)';
+        // Show dynamic insights instead of redundant title
         const titleElement = document.getElementById('chartTitle');
         if (titleElement) {
-            titleElement.textContent = title;
+            // Calculate quick insight from current data
+            if (this.currentData && this.currentData.length > 0) {
+                const firstYear = this.currentData[0];
+                const lastYear = this.currentData[this.currentData.length - 1];
+                const firstValue = firstYear.Total_cars;
+                const lastValue = lastYear.Total_cars;
+                const growthRate = ((lastValue - firstValue) / firstValue * 100).toFixed(1);
+                const trend = parseFloat(growthRate) > 0 ? 'increased' : 'decreased';
+                const icon = parseFloat(growthRate) > 0 ? '📈' : '📉';
+                
+                titleElement.innerHTML = `${icon} Car ownership ${trend} by ${Math.abs(growthRate)}% from ${firstYear.Year} to ${lastYear.Year}`;
+            } else {
+                titleElement.textContent = 'Loading Melbourne car ownership data...';
+            }
         }
     }
 

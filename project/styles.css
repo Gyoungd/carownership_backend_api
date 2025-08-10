@@ -671,9 +671,10 @@ body {
 .analytics-controls {
     display: flex;
     gap: 20px;
-    align-items: center; /* Changed from 'end' to 'center' since no button */
-    margin-bottom: 40px;
-    padding: 25px 30px; /* Reduced vertical padding slightly */
+    align-items: center;
+    margin-top: 20px;    /* Reduced space from header */
+    margin-bottom: 30px; /* Reduced space to chart */
+    padding: 20px 30px;  /* Reduced vertical padding */
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -693,17 +694,33 @@ body {
 
 .control-select {
     padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    border: 2px solid var(--border-light);
+    border-radius: 10px;
     font-size: 1rem;
+    font-weight: 500;
     background: white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2334699A' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 20px;
     min-width: 180px;
-    transition: border-color 0.3s ease;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .control-select:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: var(--primary-medium);
+    box-shadow: 0 0 0 3px rgba(52, 105, 154, 0.1);
+}
+
+.control-select:hover {
+    border-color: var(--primary-light);
+    background-color: rgba(52, 105, 154, 0.02);
 }
 
 .analytics-content {
@@ -729,9 +746,14 @@ body {
 }
 
 .chart-header h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--primary-medium);
+    background: rgba(52, 105, 154, 0.05);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-medium);
+    margin: 0;
 }
 
 .loading-spinner {
@@ -882,18 +904,40 @@ body {
 
 .error-message, .no-data-message {
     text-align: center;
-    padding: 40px;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
     color: #6b7280;
+    margin: 20px 0;
+    transition: opacity 0.3s ease;
 }
 
 .error-message i, .no-data-message i {
-    font-size: 3rem;
-    color: #ef4444;
-    margin-bottom: 20px;
+    font-size: 1.2rem;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
 .no-data-message i {
     color: #6b7280;
+}
+
+/* Chart Citation Styles */
+.chart-citation {
+    text-align: left;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: rgba(52, 105, 154, 0.05);
+    border-radius: 6px;
+    border-left: 3px solid var(--primary-light);
+}
+
+.chart-citation small {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-style: italic;
+    line-height: 1.4;
 }
 
 .nav-link.active {
