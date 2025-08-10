@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Ownership Trends - Melbourne Mobility Insights</title>
+    <title>Melbourne CBD Population Trends - Melbourne Mobility Insights</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -20,8 +20,8 @@
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="services.html" class="nav-link active">Car Ownership Trends</a></li>
-                <li><a href="population.html" class="nav-link">Population Trends</a></li>
+                <li><a href="services.html" class="nav-link">Car Ownership Trends</a></li>
+                <li><a href="population.html" class="nav-link active">Population Trends</a></li>
             </ul>
             <div class="nav-toggle">
                 <span></span>
@@ -31,38 +31,54 @@
         </div>
     </nav>
 
-    <!-- Services Hero Section -->
+    <!-- Population Hero Section -->
     <section class="services-hero">
         <div class="container">
             <div class="services-hero-content">
-                <h1>Car Ownership Trends</h1>
-                <p>Comprehensive analysis of car ownership trends in Melbourne and Australia with interactive data visualization powered by ABS datasets.</p>
+                <h1>Melbourne CBD Population Trends</h1>
+                <p>Comprehensive analysis of Melbourne CBD population growth across East, West, and North districts with interactive data visualization.</p>
             </div>
         </div>
     </section>
 
-    <!-- Analytics Dashboard -->
+    <!-- Population Analytics Dashboard -->
     <section class="analytics-dashboard">
         <div class="container">
             <div class="dashboard-header">
-                <h2>Melbourne Car Ownership Trends</h2>
-                <p>Real-time interactive data visualization powered by Australian Bureau of Statistics</p>
+                <h2>Melbourne CBD Population Analytics</h2>
+                <p>Real-time interactive population trends powered by Australian Bureau of Statistics</p>
             </div>
 
-            <!-- Controls -->
+            <!-- Population Controls -->
             <div class="analytics-controls">
                 <div class="control-group">
-                    <label for="stateSelect">Select Region:</label>
-                    <select id="stateSelect" class="control-select">
-                        <option value="">Australia National</option>
-                        <option value="VIC">Melbourne</option>
+                    <label for="areaSelect">Select Area:</label>
+                    <select id="areaSelect" class="control-select">
+                        <option value="">CBD Total</option>
+                        <option value="east">CBD East</option>
+                        <option value="west">CBD West</option>
+                        <option value="north">CBD North</option>
                     </select>
                 </div>
                 <div class="control-group">
-                    <label for="yearSelect">Select Year:</label>
-                    <select id="yearSelect" class="control-select">
-                        <option value="">All Years</option>
-                        <option value="2016">2016</option>
+                    <label for="startYearSelect">Start Year:</label>
+                    <select id="startYearSelect" class="control-select">
+                        <option value="2001">2001</option>
+                        <option value="2002">2002</option>
+                        <option value="2003">2003</option>
+                        <option value="2004">2004</option>
+                        <option value="2005">2005</option>
+                        <option value="2006">2006</option>
+                        <option value="2007">2007</option>
+                        <option value="2008">2008</option>
+                        <option value="2009">2009</option>
+                        <option value="2010">2010</option>
+                        <option value="2011">2011</option>
+                        <option value="2012">2012</option>
+                        <option value="2013">2013</option>
+                        <option value="2014">2014</option>
+                        <option value="2015">2015</option>
+                        <option value="2016" selected>2016</option>
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                         <option value="2019">2019</option>
@@ -70,60 +86,86 @@
                         <option value="2021">2021</option>
                     </select>
                 </div>
+                <div class="control-group">
+                    <label for="endYearSelect">End Year:</label>
+                    <select id="endYearSelect" class="control-select">
+                        <option value="2001">2001</option>
+                        <option value="2002">2002</option>
+                        <option value="2003">2003</option>
+                        <option value="2004">2004</option>
+                        <option value="2005">2005</option>
+                        <option value="2006">2006</option>
+                        <option value="2007">2007</option>
+                        <option value="2008">2008</option>
+                        <option value="2009">2009</option>
+                        <option value="2010">2010</option>
+                        <option value="2011">2011</option>
+                        <option value="2012">2012</option>
+                        <option value="2013">2013</option>
+                        <option value="2014">2014</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021" selected>2021</option>
+                    </select>
+                </div>
 
             </div>
 
-            <!-- Main Analytics Content -->
+            <!-- Main Population Analytics Content -->
             <div class="analytics-content">
                 <!-- Chart Container -->
                 <div class="chart-container">
                     <div class="chart-header">
-                        <h3 id="chartTitle">Car Ownership Trends</h3>
-                        <div class="loading-spinner" id="loadingSpinner">
+                        <h3 id="populationChartTitle">Melbourne CBD Population Trends</h3>
+                        <div class="loading-spinner" id="populationLoadingSpinner">
                             <i class="fas fa-spinner fa-spin"></i>
                             <span>Loading data...</span>
                         </div>
                     </div>
-                    <canvas id="ownershipChart"></canvas>
+                    <canvas id="populationChart"></canvas>
                 </div>
             </div>
 
-            <!-- Analysis Panel - Moved Below Chart -->
+            <!-- Analysis Panel - Below Chart -->
             <div class="analysis-panel-bottom">
-                <h3>Data Analysis & Insights</h3>
-                <div id="analysisContent" class="analysis-content-bottom">
+                <h3>Population Analysis & Insights</h3>
+                <div id="populationAnalysisContent" class="analysis-content-bottom">
                     <div class="analysis-grid">
                         <div class="analysis-section">
-                            <h4><i class="fas fa-chart-line"></i> Key Trends</h4>
-                            <p id="trendAnalysis">Select data parameters to view detailed trend analysis and insights.</p>
+                            <h4><i class="fas fa-users"></i> Population Trends</h4>
+                            <p id="populationTrendAnalysis">Select area and time period to view detailed population trend analysis and insights.</p>
                         </div>
 
                         <div class="analysis-section">
-                            <h4><i class="fas fa-calculator"></i> Statistical Summary</h4>
-                            <div class="stats-grid" id="statsGrid">
+                            <h4><i class="fas fa-chart-bar"></i> Growth Statistics</h4>
+                            <div class="stats-grid" id="populationStatsGrid">
                                 <div class="stat-item">
-                                    <span class="stat-label">Total Records:</span>
-                                    <span class="stat-value" id="totalRecords">-</span>
+                                    <span class="stat-label">Total Population:</span>
+                                    <span class="stat-value" id="totalPopulation">-</span>
                                 </div>
                                 <div class="stat-item">
                                     <span class="stat-label">Average Growth:</span>
-                                    <span class="stat-value" id="avgGrowth">-</span>
+                                    <span class="stat-value" id="avgPopulationGrowth">-</span>
                                 </div>
                                 <div class="stat-item">
                                     <span class="stat-label">Peak Year:</span>
-                                    <span class="stat-value" id="peakYear">-</span>
+                                    <span class="stat-value" id="populationPeakYear">-</span>
                                 </div>
                                 <div class="stat-item">
                                     <span class="stat-label">Growth Rate:</span>
-                                    <span class="stat-value" id="growthRate">-</span>
+                                    <span class="stat-value" id="populationGrowthRate">-</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="analysis-section">
-                            <h4><i class="fas fa-lightbulb"></i> Insights</h4>
-                            <ul id="insightsList" class="insights-list">
-                                <li>Load data to view comprehensive insights</li>
+                            <h4><i class="fas fa-lightbulb"></i> Key Insights</h4>
+                            <ul id="populationInsightsList" class="insights-list">
+                                <li>Load data to view comprehensive population insights</li>
                             </ul>
                         </div>
 
@@ -131,7 +173,7 @@
                             <h4><i class="fas fa-database"></i> Data Source</h4>
                             <p class="data-source">
                                 <strong>Australian Bureau of Statistics</strong><br>
-                                Motor Vehicle Census, 2016-2021<br>
+                                Melbourne CBD Population Census, 2016-2021<br>
                                 <small>Data updated: Real-time via API</small>
                             </p>
                         </div>
@@ -186,22 +228,22 @@
                 <div class="data-sources-grid">
                     <div class="data-source">
                         <strong>① Car Ownership</strong><br>
-                        <small>Australian Bureau of Statistics (ABS). "Motor vehicle census, Australia".</small><br>
+                        <small>Australian Bureau of Statistics (ABS). "Motor vehicle census, Australia". Catalogue No. 9309.0, 2024.</small><br>
                         <a href="https://www.abs.gov.au/statistics/industry/tourism-and-transport/motor-vehicle-census-australia" target="_blank">👉 View Source</a>
                     </div>
                     <div class="data-source">
                         <strong>② Population</strong><br>
-                        <small>Australian Bureau of Statistics (ABS). "National, state and territory population".</small><br>
+                        <small>Australian Bureau of Statistics (ABS). "National, state and territory population". Catalogue No. 3101.0, 2024.</small><br>
                         <a href="https://www.abs.gov.au/statistics/people/population/national-state-and-territory-population" target="_blank">👉 View Source</a>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Melbourne Mobility Insights. All rights reserved.</p>
+                <p>&copy; 2024 Melbourne Mobility Insights. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="services.js"></script>
+    <script src="population.js"></script>
 </body>
 </html>

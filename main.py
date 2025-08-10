@@ -100,15 +100,22 @@ def get_all_population():
 
 @app.get("/population/{area}", tags=["Population"])
 def get_population_by_area(area: str):
-    """특정 지역의 인구 데이터 반환 (예: Melbourne CBD East, West, North)"""
+    """특정 지역의 인구 데이터 반환 (예: east, west, north)"""
     validate_dataframe(population_df, "Population")
     
-    # area 컬럼명은 실제 CSV 구조에 맞게 조정 필요
-    area_column = 'Area'  # 실제 컬럼명으로 변경
-    if area_column not in population_df.columns:
-        raise HTTPException(status_code=500, detail="Population data structure error")
+    # 지역명 매핑
+    area_mapping = {
+        'east': 'Melbourne CBD - East',
+        'west': 'Melbourne CBD - West', 
+        'north': 'Melbourne CBD - North'
+    }
     
-    data = population_df[population_df[area_column].str.lower() == area.lower()]
+    if area.lower() not in area_mapping:
+        raise HTTPException(status_code=404, detail=f"Invalid area: {area}. Use: east, west, north")
+    
+    target_region = area_mapping[area.lower()]
+    data = population_df[population_df['region_name'] == target_region]
+    
     if data.empty:
         raise HTTPException(status_code=404, detail=f"No population data found for area: {area}")
     return data.to_dict(orient="records")
@@ -118,16 +125,22 @@ def get_population_by_area_year(area: str, year: int):
     """특정 지역의 특정 연도 인구 데이터 반환"""
     validate_dataframe(population_df, "Population")
     
-    area_column = 'Area'  # 실제 컬럼명으로 변경
-    year_column = 'Year'  # 실제 컬럼명으로 변경
+    # 지역명 매핑
+    area_mapping = {
+        'east': 'Melbourne CBD - East',
+        'west': 'Melbourne CBD - West',
+        'north': 'Melbourne CBD - North'
+    }
     
-    if area_column not in population_df.columns or year_column not in population_df.columns:
-        raise HTTPException(status_code=500, detail="Population data structure error")
+    if area.lower() not in area_mapping:
+        raise HTTPException(status_code=404, detail=f"Invalid area: {area}. Use: east, west, north")
     
+    target_region = area_mapping[area.lower()]
     data = population_df[
-        (population_df[area_column].str.lower() == area.lower()) & 
-        (population_df[year_column] == year)
+        (population_df['region_name'] == target_region) & 
+        (population_df['year'] == year)
     ]
+    
     if data.empty:
         raise HTTPException(status_code=404, detail=f"No population data found for {area} in {year}")
     return data.to_dict(orient="records")

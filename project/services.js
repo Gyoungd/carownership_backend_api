@@ -10,13 +10,10 @@ class CarOwnershipAnalytics {
     }
 
     initializeEventListeners() {
-        const updateButton = document.getElementById('updateChart');
         const stateSelect = document.getElementById('stateSelect');
         const yearSelect = document.getElementById('yearSelect');
 
-        updateButton.addEventListener('click', () => this.updateChart());
-        
-        // Auto-update on selection change
+        // Real-time updates on selection change
         stateSelect.addEventListener('change', () => this.updateChart());
         yearSelect.addEventListener('change', () => this.updateChart());
     }

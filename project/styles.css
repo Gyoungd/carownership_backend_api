@@ -58,6 +58,12 @@ body {
     font-size: 24px;
     font-weight: 700;
     color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-logo:hover {
+    color: var(--primary-medium);
 }
 
 .nav-logo i {
@@ -342,22 +348,7 @@ body {
     position: relative;
 }
 
-.service-card-coming-soon {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.coming-soon-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: var(--primary-medium);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
+/* Coming soon styles removed - both services are now active */
 
 .service-card:hover {
     transform: translateY(-10px);
@@ -506,11 +497,35 @@ body {
     padding: 60px 0 20px;
 }
 
-.footer-content {
+/* Footer Row Layout */
+.footer-content-row {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 40px;
     margin-bottom: 40px;
+}
+
+/* Data Sources Section */
+.footer-data-sources {
+    margin-bottom: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(55, 65, 81, 0.3);
+}
+
+.footer-data-sources h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.data-sources-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .footer-logo {
@@ -519,7 +534,7 @@ body {
     gap: 10px;
     font-size: 24px;
     font-weight: 700;
-    color: #2563eb;
+    color: white;
     margin-bottom: 16px;
 }
 
@@ -581,7 +596,7 @@ body {
 }
 
 .footer-bottom {
-    border-top: 1px solid #374151;
+    border-top: 1px solid white;
     padding-top: 20px;
     text-align: center;
     color: #9ca3af;
@@ -656,9 +671,9 @@ body {
 .analytics-controls {
     display: flex;
     gap: 20px;
-    align-items: end;
+    align-items: center; /* Changed from 'end' to 'center' since no button */
     margin-bottom: 40px;
-    padding: 30px;
+    padding: 25px 30px; /* Reduced vertical padding slightly */
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -703,7 +718,7 @@ body {
     box-shadow: 0 10px 25px rgba(17, 63, 103, 0.08);
     border: 1px solid var(--border-light);
     margin-bottom: 40px;
-    min-height: 600px;
+    min-height: 550px; /* Reduced from 600px to 550px for better viewport fit */
 }
 
 .chart-header {
@@ -731,6 +746,11 @@ body {
 }
 
 #ownershipChart {
+    height: 500px !important;
+    width: 100% !important;
+}
+
+#populationChart {
     height: 500px !important;
     width: 100% !important;
 }
@@ -858,49 +878,7 @@ body {
     color: #64748b;
 }
 
-.api-info {
-    background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
 
-.api-info h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 25px;
-}
-
-.api-endpoints {
-    display: grid;
-    gap: 15px;
-}
-
-.endpoint {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 15px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border-left: 4px solid #10b981;
-}
-
-.endpoint code {
-    background: #1f2937;
-    color: #10b981;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-family: 'Monaco', 'Menlo', monospace;
-    font-weight: 600;
-    min-width: 200px;
-}
-
-.endpoint span {
-    color: #6b7280;
-    font-size: 0.95rem;
-}
 
 .error-message, .no-data-message {
     text-align: center;
@@ -992,10 +970,15 @@ body {
         gap: 40px;
     }
 
-    .footer-content {
+    .footer-content-row {
         grid-template-columns: 1fr;
         gap: 30px;
         text-align: center;
+    }
+    
+    .data-sources-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .social-links {
@@ -1022,27 +1005,50 @@ body {
     
     .chart-container {
         padding: 20px;
-        min-height: 400px;
+        min-height: 350px; /* Reduced mobile height for better viewport fit */
     }
     
-    .analysis-panel-bottom {
-        padding: 20px;
+    #ownershipChart, #populationChart {
+        height: 400px !important; /* Smaller height for mobile */
     }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .endpoint {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .endpoint code {
-        min-width: auto;
-        width: 100%;
-    }
+}
+
+/* Data Sources Section */
+.data-sources {
+    margin-top: 16px;
+}
+
+.data-source {
+    margin-bottom: 20px;
+    padding: 12px;
+    background: rgba(55, 65, 81, 0.3);
+    border-radius: 8px;
+    border-left: 3px solid var(--primary-medium);
+}
+
+.data-source strong {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.data-source small {
+    color: #d1d5db;
+    font-size: 12px;
+    line-height: 1.4;
+    display: block;
+    margin: 6px 0;
+}
+
+.data-source a {
+    color: var(--primary-light);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.data-source a:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 @media (max-width: 480px) {

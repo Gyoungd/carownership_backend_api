@@ -12,14 +12,15 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
+            <a href="index.html" class="nav-logo">
                 <i class="fas fa-car"></i>
                 <span>Melbourne Mobility Insights</span>
-            </div>
+            </a>
             <ul class="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="services.html" class="nav-link">Our Services</a></li>
+                <li><a href="services.html" class="nav-link">Car Ownership Trends</a></li>
+                <li><a href="population.html" class="nav-link">Population Trends</a></li>
             </ul>
             <div class="nav-toggle">
                 <span></span>
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Business Solutions" />
+                <img src="mainpage-photo.jpg" alt="Melbourne Traffic and Mobility" />
             </div>
         </div>
     </section>
@@ -94,7 +95,7 @@
                     <div class="service-icon">
                         <i class="fas fa-car"></i>
                     </div>
-                    <h3>Car Ownership Analytics</h3>
+                    <h3>Car Ownership Trends</h3>
                     <p>Comprehensive analysis of car ownership trends in Melbourne and Australia, powered by ABS datasets.</p>
                     <ul>
                         <li>Melbourne vs National Trends</li>
@@ -102,7 +103,7 @@
                         <li>Interactive Data Visualization</li>
                     </ul>
                 </div>
-                <div class="service-card service-card-coming-soon">
+                <div class="service-card" onclick="window.location.href='population.html'">
                     <div class="service-icon">
                         <i class="fas fa-building"></i>
                     </div>
@@ -111,9 +112,8 @@
                     <ul>
                         <li>East, West, North CBD Analysis</li>
                         <li>Population Growth Patterns</li>
-                        <li>Demographic Insights</li>
+                        <li>Year Range Selection</li>
                     </ul>
-                    <div class="coming-soon-badge">Coming Soon</div>
                 </div>
             </div>
         </div>
@@ -123,27 +123,20 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
+            <!-- First Row -->
+            <div class="footer-content-row">
                 <div class="footer-section">
                     <div class="footer-logo">
                         <i class="fas fa-car"></i>
                         <span>Melbourne Mobility Insights</span>
                     </div>
                     <p>Providing clear and accessible data insights on Melbourne's mobility and urban planning challenges.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fas fa-envelope"></i></a>
-                    </div>
                 </div>
                 <div class="footer-section">
                     <h4>Analytics</h4>
                     <ul>
                         <li><a href="services.html">Car Ownership Trends</a></li>
-                        <li><a href="#">CBD Population Analysis</a></li>
-                        <li><a href="#">Data Visualization</a></li>
-                        <li><a href="#">ABS Integration</a></li>
+                        <li><a href="population.html">CBD Population Analysis</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -151,8 +144,6 @@
                     <ul>
                         <li><a href="#about">About Our Team</a></li>
                         <li><a href="#about">Our Mission</a></li>
-                        <li><a href="#">Methodology</a></li>
-                        <li><a href="#">Data Sources</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -165,8 +156,25 @@
                     </ul>
                 </div>
             </div>
+            
+            <!-- Second Row - Data Sources -->
+            <div class="footer-data-sources">
+                <h4>Data Sources</h4>
+                <div class="data-sources-grid">
+                    <div class="data-source">
+                        <strong>① Car Ownership</strong><br>
+                        <small>Australian Bureau of Statistics (ABS). "Motor vehicle census, Australia".</small><br>
+                        <a href="https://www.abs.gov.au/statistics/industry/tourism-and-transport/motor-vehicle-census-australia" target="_blank">👉 View Source</a>
+                    </div>
+                    <div class="data-source">
+                        <strong>② Population</strong><br>
+                        <small>Australian Bureau of Statistics (ABS). "National, state and territory population".</small><br>
+                        <a href="https://www.abs.gov.au/statistics/people/population/national-state-and-territory-population" target="_blank">👉 View Source</a>
+                    </div>
+                </div>
+            </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Melbourne Mobility Insights. All rights reserved.</p>
+                <p>&copy; 2025 Melbourne Mobility Insights. All rights reserved.</p>
             </div>
         </div>
     </footer>
