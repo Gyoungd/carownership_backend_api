@@ -38,26 +38,34 @@ class PopulationAnalytics {
         const startYear = parseInt(document.getElementById('startYearSelect').value);
         const endYear = parseInt(document.getElementById('endYearSelect').value);
         
-        let endpoint = '/population';
-        
-        // API endpoint structure
-        if (area) {
-            endpoint = `/population/${area}`;
-        }
-
-        const url = `${this.baseURL}${endpoint}`;
-        
         try {
             this.showLoading(true);
-            console.log('Fetching population data from:', url);
+            let data = [];
             
-            const response = await fetch(url);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (area) {
+                // Fetch specific area data
+                const url = `${this.baseURL}/population/${area}`;
+                console.log('Fetching population data from:', url);
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                data = await response.json();
+            } else {
+                // Fetch CBD Total data using /population/total endpoint
+                console.log('Fetching CBD Total data from /population/total');
+                const url = `${this.baseURL}/population/total`;
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                data = await response.json();
             }
             
-            const data = await response.json();
             console.log('Received population data:', data);
             
             // Filter by year range
@@ -83,7 +91,7 @@ class PopulationAnalytics {
             'north': 'Melbourne CBD - North'
         };
         
-        const areaName = areas[area] || 'CBD Total';
+        const areaName = areas[area] || 'Melbourne CBD - Total';
         const mockData = [];
         
         for (let year = startYear; year <= endYear; year++) {
@@ -101,11 +109,15 @@ class PopulationAnalytics {
             const yearGrowth = Math.pow(1 + growthRate, year - baseYear);
             const population = Math.round(basePopulation * yearGrowth);
             
+            // Create display_name for consistency with real API
+            const displayName = areaName.replace('Melbourne CBD - ', '');
+            
             mockData.push({
                 region_name: areaName,
                 year: year,
                 population: population,
-                growth_rate: ((population / basePopulation - 1) * 100).toFixed(1)
+                growth_rate: ((population / basePopulation - 1) * 100).toFixed(1),
+                display_name: displayName
             });
         }
         
@@ -260,12 +272,8 @@ class PopulationAnalytics {
     }
 
     processDataForChart(data) {
-        const area = document.getElementById('areaSelect').value;
-        
-        // If no area selected (CBD Total), aggregate data
-        if (!area) {
-            return this.aggregatePopulationData(data);
-        }
+        // Both individual areas and CBD Total now come as single datasets
+        // No need for aggregation since /population/total provides aggregated data
         
         // Sort data by year
         const sortedData = [...data].sort((a, b) => a.year - b.year);
@@ -275,32 +283,16 @@ class PopulationAnalytics {
         return { labels, values };
     }
 
-    aggregatePopulationData(data) {
-        // Group by year and sum population
-        const yearTotals = {};
-        
-        data.forEach(item => {
-            const year = item.year;
-            if (!yearTotals[year]) {
-                yearTotals[year] = 0;
-            }
-            yearTotals[year] += parseInt(item.population || 0);
-        });
-        
-        // Sort by year
-        const sortedYears = Object.keys(yearTotals).sort((a, b) => parseInt(a) - parseInt(b));
-        const labels = sortedYears;
-        const values = sortedYears.map(year => yearTotals[year]);
 
-        return { labels, values };
-    }
 
     getChartLabel() {
         const area = document.getElementById('areaSelect').value;
+        
+        // Use simplified names for better readability
         const areaNames = {
-            'east': 'Melbourne CBD - East',
-            'west': 'Melbourne CBD - West', 
-            'north': 'Melbourne CBD - North'
+            'east': 'CBD East',
+            'west': 'CBD West', 
+            'north': 'CBD North'
         };
         
         return area ? `${areaNames[area]} Population` : 'CBD Total Population';
@@ -309,12 +301,9 @@ class PopulationAnalytics {
     updateAnalysis(data) {
         console.log('updateAnalysis called with data:', data); // Debug log
         
-        // 🚨 여기서 의도적으로 에러를 발생시킵니다 (analysis만 에러, 그래프는 정상)
+        // ✅ 정상적인 analysis 처리
         try {
-            // 존재하지 않는 속성에 접근하여 에러 발생
-            const nonExistentProperty = data.someNonExistentProperty.value;
-            
-            // 이 부분은 실행되지 않음
+            // 데이터 유효성 검사
             if (!Array.isArray(data) || data.length === 0) {
                 console.error('Invalid data for analysis:', data);
                 this.showNoDataMessage();
@@ -322,23 +311,14 @@ class PopulationAnalytics {
             }
 
             const area = document.getElementById('areaSelect').value;
-            let values, labels;
             
             console.log('Selected area:', area); // Debug log
             
-            // If no area selected (CBD Total), use aggregated data
-            if (!area) {
-                console.log('Using aggregated data for CBD Total');
-                const aggregatedData = this.aggregatePopulationData(data);
-                values = aggregatedData.values;
-                labels = aggregatedData.labels;
-            } else {
-                console.log('Using filtered data for specific area');
-                // Sort data by year for proper analysis
-                const sortedData = [...data].sort((a, b) => a.year - b.year);
-                values = sortedData.map(item => parseInt(item.population || 0));
-                labels = sortedData.map(item => item.year.toString());
-            }
+            // Both CBD Total and individual areas now come as single datasets
+            console.log('Processing data for analysis');
+            const sortedData = [...data].sort((a, b) => a.year - b.year);
+            const values = sortedData.map(item => parseInt(item.population || 0));
+            const labels = sortedData.map(item => item.year.toString());
 
             // Calculate statistics
             const total = values.reduce((sum, val) => sum + val, 0);
@@ -368,7 +348,13 @@ class PopulationAnalytics {
     }
 
     updateTrendAnalysis(area, growthRate, values) {
-        const areaName = area === 'VIC' ? 'Melbourne' : (area ? `CBD ${area.charAt(0).toUpperCase() + area.slice(1)}` : 'CBD Total');
+        // Use clean, user-friendly names
+        const areaNames = {
+            'east': 'CBD East',
+            'west': 'CBD West',
+            'north': 'CBD North'
+        };
+        const areaName = area ? areaNames[area] : 'CBD Total';
         const trend = parseFloat(growthRate) >= 0 ? 'increasing' : 'decreasing';
         const trendIcon = trend === 'increasing' ? '📈' : '📉';
         

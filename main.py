@@ -94,12 +94,18 @@ def get_ownership_by_state_year(state: str, year: int):
 
 @app.get("/population", tags=["Population"])
 def get_all_population():
-    """모든 인구 데이터 반환"""
+    """모든 인구 데이터 반환 (Melbourne CBD - Total 제외, 개별 지역만)"""
     try:
         validate_dataframe(population_df, "Population")
-        # DataFrame을 안전하게 변환
-        result = population_df.to_dict(orient="records")
-        print(f"✅ Returning {len(result)} population records")
+        
+        # "Melbourne CBD - Total"을 제외하고 개별 지역만 반환
+        filtered_df = population_df[population_df['region_name'] != 'Melbourne CBD - Total'].copy()
+        
+        # Frontend 친화적 region_name 변환
+        filtered_df['display_name'] = filtered_df['region_name'].str.replace('Melbourne CBD - ', '')
+        
+        result = filtered_df.to_dict(orient="records")
+        print(f"✅ Returning {len(result)} population records (excluding Total)")
         return result
     except Exception as e:
         print(f"❌ Error in get_all_population: {e}")
@@ -107,24 +113,29 @@ def get_all_population():
 
 @app.get("/population/{area}", tags=["Population"])
 def get_population_by_area(area: str):
-    """특정 지역의 인구 데이터 반환 (예: east, west, north)"""
+    """특정 지역의 인구 데이터 반환 (예: east, west, north, total)"""
     validate_dataframe(population_df, "Population")
     
-    # 지역명 매핑
+    # 지역명 매핑 (total 추가)
     area_mapping = {
         'east': 'Melbourne CBD - East',
         'west': 'Melbourne CBD - West', 
-        'north': 'Melbourne CBD - North'
+        'north': 'Melbourne CBD - North',
+        'total': 'Melbourne CBD - Total'  # 추가!
     }
     
     if area.lower() not in area_mapping:
-        raise HTTPException(status_code=404, detail=f"Invalid area: {area}. Use: east, west, north")
+        raise HTTPException(status_code=404, detail=f"Invalid area: {area}. Use: east, west, north, total")
     
     target_region = area_mapping[area.lower()]
-    data = population_df[population_df['region_name'] == target_region]
+    data = population_df[population_df['region_name'] == target_region].copy()
     
     if data.empty:
         raise HTTPException(status_code=404, detail=f"No population data found for area: {area}")
+    
+    # Frontend 친화적 display_name 추가
+    data['display_name'] = data['region_name'].str.replace('Melbourne CBD - ', '')
+    
     return data.to_dict(orient="records")
 
 @app.get("/population/{area}/{year}", tags=["Population"])
@@ -132,24 +143,29 @@ def get_population_by_area_year(area: str, year: int):
     """특정 지역의 특정 연도 인구 데이터 반환"""
     validate_dataframe(population_df, "Population")
     
-    # 지역명 매핑
+    # 지역명 매핑 (total 추가)
     area_mapping = {
         'east': 'Melbourne CBD - East',
         'west': 'Melbourne CBD - West',
-        'north': 'Melbourne CBD - North'
+        'north': 'Melbourne CBD - North',
+        'total': 'Melbourne CBD - Total'
     }
     
     if area.lower() not in area_mapping:
-        raise HTTPException(status_code=404, detail=f"Invalid area: {area}. Use: east, west, north")
+        raise HTTPException(status_code=404, detail=f"Invalid area: {area}. Use: east, west, north, total")
     
     target_region = area_mapping[area.lower()]
     data = population_df[
         (population_df['region_name'] == target_region) & 
         (population_df['year'] == year)
-    ]
+    ].copy()
     
     if data.empty:
         raise HTTPException(status_code=404, detail=f"No population data found for {area} in {year}")
+    
+    # Frontend 친화적 display_name 추가
+    data['display_name'] = data['region_name'].str.replace('Melbourne CBD - ', '')
+    
     return data.to_dict(orient="records")
 
 # ==================== UTILITY ENDPOINTS ====================

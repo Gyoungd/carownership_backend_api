@@ -10,15 +10,8 @@ class CarOwnershipAnalytics {
     }
 
     initializeEventListeners() {
-        const updateButton = document.getElementById('updateChart');
-        const stateSelect = document.getElementById('stateSelect');
-        const yearSelect = document.getElementById('yearSelect');
-
-        updateButton.addEventListener('click', () => this.updateChart());
-        
-        // Auto-update on selection change
-        stateSelect.addEventListener('change', () => this.updateChart());
-        yearSelect.addEventListener('change', () => this.updateChart());
+        // No filters needed - Melbourne data only
+        console.log('Melbourne Car Ownership Analytics initialized');
     }
 
     async loadInitialData() {
@@ -26,17 +19,8 @@ class CarOwnershipAnalytics {
     }
 
     async fetchData() {
-        const state = document.getElementById('stateSelect').value;
-        const year = document.getElementById('yearSelect').value;
-        
-        let endpoint = '/ownership';
-        
-        if (state && year) {
-            endpoint = `/ownership/${state}/${year}`;
-        } else if (state) {
-            endpoint = `/ownership/${state}`;
-        }
-
+        // Always fetch Melbourne (VIC) data - no filters needed
+        const endpoint = '/ownership/VIC';
         const url = `${this.baseURL}${endpoint}`;
         
         try {
@@ -91,7 +75,7 @@ class CarOwnershipAnalytics {
             data: {
                 labels: chartData.labels,
                 datasets: [{
-                    label: 'Car Ownership Count',
+                    label: 'Melbourne Car Ownership',
                     data: chartData.values,
                     borderColor: '#2563eb',
                     backgroundColor: 'rgba(37, 99, 235, 0.1)',
@@ -279,18 +263,7 @@ class CarOwnershipAnalytics {
     }
 
     updateTrendAnalysis(values, labels, growthRate) {
-        let analysis = '';
-        
-        const state = document.getElementById('stateSelect').value || 'All States';
-        const year = document.getElementById('yearSelect').value;
-        
-        if (state && year) {
-            analysis = `Analysis for ${state} in ${year}: `;
-        } else if (state) {
-            analysis = `Analysis for ${state}: `;
-        } else {
-            analysis = 'Analysis: ';
-        }
+        let analysis = 'Melbourne Car Ownership Analysis: ';
 
         if (values.length > 1) {
             const trend = parseFloat(growthRate) > 5 ? 'strong upward' : 
@@ -318,16 +291,12 @@ class CarOwnershipAnalytics {
     }
 
     updateTitle() {
-        const state = document.getElementById('stateSelect').value;
-        const stateName = state ? document.getElementById('stateSelect').selectedOptions[0].text : 'All States';
-        
-        let title = 'Car Ownership Trends';
-        
-        if (state) {
-            title = `Car Ownership Trends - ${stateName}`;
+        // Fixed title for Melbourne data
+        const title = 'Melbourne Car Ownership Trends (2016-2021)';
+        const titleElement = document.getElementById('chartTitle');
+        if (titleElement) {
+            titleElement.textContent = title;
         }
-        
-        document.getElementById('chartTitle').textContent = title;
     }
 
     showLoading(show) {
