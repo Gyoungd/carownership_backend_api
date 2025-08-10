@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Population Trends - Melbourne Mobility Insights</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-car"></i>
+                <span>Melbourne Mobility Insights</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="services.html" class="nav-link">Car Ownership Trends</a></li>
+                <li><a href="population.html" class="nav-link active">Population Trends</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Services Hero Section -->
+    <section class="services-hero">
+        <div class="container">
+            <div class="services-hero-content">
+                <h1>Melbourne CBD Population Trends</h1>
+                <p>Comprehensive analysis of Melbourne CBD population growth with interactive data visualization powered by ABS datasets.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Dashboard -->
+    <section class="analytics-dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2>Melbourne CBD Population Analytics</h2>
+                <p>Real-time interactive population trends powered by Australian Bureau of Statistics</p>
+            </div>
+            
+            <div class="analytics-content">
+                <div class="analytics-controls">
+                    <div class="control-group">
+                        <label for="areaSelect">Select Region:</label>
+                        <select id="areaSelect" class="control-select">
+                            <option value="">CBD Total</option>
+                            <option value="east">CBD East</option>
+                            <option value="west">CBD West</option>
+                            <option value="north">CBD North</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="startYearSelect">Select Start Year:</label>
+                        <select id="startYearSelect" class="control-select">
+                            <option value="2001" selected>2001</option>
+                            <option value="2005">2005</option>
+                            <option value="2010">2010</option>
+                            <option value="2015">2015</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="endYearSelect">Select End Year:</label>
+                        <select id="endYearSelect" class="control-select">
+                            <option value="2015">2015</option>
+                            <option value="2018">2018</option>
+                            <option value="2021" selected>2021</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="populationChart"></canvas>
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner"></div>
+                        <p>Loading population data...</p>
+                    </div>
+                    <div class="error-message" id="errorMessage"></div>
+                    <!-- Data Citation -->
+                    <div class="chart-citation">
+                        <small>Reference: Australian Bureau of Statistics. (2022, July 26). <em>Regional population, 2021: Population estimates by LGA and electoral division (ASGS2021), 2001 to 2021 – Final</em> [Data set].</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analysis Panel (Below Chart) -->
+            <div class="analysis-panel-bottom">
+                <div class="analysis-content-bottom">
+                    <div class="analysis-grid">
+                        <div class="analysis-section">
+                            <h4><i class="fas fa-chart-line"></i> Key Trends</h4>
+                            <div id="trendAnalysis">
+                                <p>Select filters to view population trend analysis...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h4><i class="fas fa-calculator"></i> Statistical Summary</h4>
+                            <div id="statisticalSummary">
+                                <p>Population statistics will appear here...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h4><i class="fas fa-lightbulb"></i> Insights</h4>
+                            <div id="insights">
+                                <p>Data insights will be generated based on your selection...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-section">
+                            <h4><i class="fas fa-database"></i> Data Source</h4>
+                            <div id="dataSource">
+                                <p><strong>Australian Bureau of Statistics</strong><br>
+                                Population Census Data 2001-2021<br>
+                                Melbourne CBD Regional Analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- First Row -->
+            <div class="footer-content-row">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-car"></i>
+                        <span>Melbourne Mobility Insights</span>
+                    </div>
+                    <p>Providing clear and accessible data insights on Melbourne's mobility and urban planning challenges.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Analytics</h4>
+                    <ul>
+                        <li><a href="services.html">Car Ownership Trends</a></li>
+                        <li><a href="population.html">CBD Population Analysis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="index.html#about">About Our Team</a></li>
+                        <li><a href="index.html#about">Our Mission</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Data Access</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Documentation</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Second Row - Data Sources -->
+            <div class="footer-data-sources">
+                <h4>Data Sources</h4>
+                <div class="data-sources-grid">
+                    <div class="data-source">
+                        <strong>① Car Ownership</strong><br>
+                        <small>Australian Bureau of Statistics. (2016-2021). <em>Motor Vehicle Census, Australia, 2021</em> [TableBuilder]. Australian Government.</small><br>
+                        <a href="https://www.abs.gov.au/statistics/microdata-tablebuilder/tablebuilder" target="_blank">👉 View Source</a>
+                    </div>
+                    <div class="data-source">
+                        <strong>② Population</strong><br>
+                        <small>Australian Bureau of Statistics. (2022, July 26). <em>Regional population, 2021: Population estimates by LGA and electoral division (ASGS2021), 2001 to 2021 – Final</em> [Data set].</small><br>
+                        <a href="https://www.abs.gov.au/statistics/people/population/regional-population/2021" target="_blank">👉 View Source</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Melbourne Mobility Insights. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="population.js"></script>
+</body>
+</html>
