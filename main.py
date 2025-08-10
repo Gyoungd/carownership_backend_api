@@ -1,7 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 import pandas as pd
 import os
 from typing import Optional
@@ -56,9 +54,6 @@ def load_data():
 
 # 데이터 로드 실행
 load_data()
-
-# ✅ 정적 파일 서빙 설정
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 # ✅ 데이터 유효성 검사 함수
 def validate_dataframe(df: pd.DataFrame, data_type: str):
@@ -176,21 +171,6 @@ def get_population_by_area_year(area: str, year: int):
 # ==================== UTILITY ENDPOINTS ====================
 
 @app.get("/", tags=["General"])
-def serve_frontend():
-    """프론트엔드 메인 페이지 서빙"""
-    return FileResponse('frontend/index.html')
-
-@app.get("/services.html", tags=["General"])
-def serve_services():
-    """차량 소유권 분석 페이지 서빙"""
-    return FileResponse('frontend/services.html')
-
-@app.get("/population.html", tags=["General"])
-def serve_population():
-    """인구 분석 페이지 서빙"""
-    return FileResponse('frontend/population.html')
-
-@app.get("/api", tags=["General"])
 def read_root():
     """API 정보 및 상태 확인"""
     return {
