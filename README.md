@@ -79,7 +79,7 @@ mel-mobility-insights-project/
 ## 🚀 Deployment & Usage
 
 ### 🌐 Live Demo
-- **Frontend**: [Melbourne Mobility Insights](https://mel-mobility-insights.netlify.app/)
+- **Frontend**: [Melbourne Mobility Insights](https://mel-mobility-insights-production.up.railway.app/)
 - **API Documentation**: [Swagger UI](https://carownershipbackendapi-production.up.railway.app/docs)
 
 ### Local Development
